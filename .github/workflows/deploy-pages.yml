@@ -1,0 +1,47 @@
+name: Deploy GitHub Pages
+
+# Publishes the repository as a static site to GitHub Pages.
+#   - Site root  → la app "Videos Prisa" (index.html)
+#   - /propuesta/ → la presentación Wemul × PRISA Media
+#
+# `actions/configure-pages` con enablement:true activa Pages la primera vez
+# que corre, así no hace falta tocar Settings → Pages manualmente.
+
+on:
+  push:
+    branches: ["claude/lucid-hypatia-1x4yi5"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un solo despliegue a la vez; no cancelar uno en curso.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages (enable on first run)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
