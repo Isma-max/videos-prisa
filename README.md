@@ -21,6 +21,10 @@ videos va en **mudo**: el sonido sale de tus propios archivos de audio
   `audio/`, se carga solo y queda en loop continuo.
 - **Reloj y temperatura de Santiago** sobre la imagen del player (hora local
   en vivo y temperatura actual vía Open-Meteo).
+- **Modo pantalla limpia** (`tv.html`): solo la imagen del video a pantalla
+  completa con el overlay de hora/temperatura, sin controles. Rota y reproduce
+  el audio igual que la versión completa (comparte la misma config). Útil para
+  dejar puesto en una TV o pantalla.
 
 ## Uso
 

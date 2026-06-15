@@ -63,6 +63,13 @@ const state = {
 const $ = (sel) => document.querySelector(sel);
 const uid = () => Math.random().toString(36).slice(2, 10);
 
+// Liga un evento solo si el elemento existe (la vista "limpia" no tiene
+// controles, así que el mismo app.js sirve para ambas páginas).
+function on(sel, event, handler) {
+  const el = $(sel);
+  if (el) el.addEventListener(event, handler);
+}
+
 /**
  * Extrae el ID de video de un link de YouTube en sus formatos habituales:
  * watch?v=ID, youtu.be/ID, /live/ID, /embed/ID, /shorts/ID, o un ID pelado.
@@ -173,12 +180,14 @@ function loadYouTubeApi() {
 
 /* --------------------------- Rotación ----------------------------------- */
 function playCurrent() {
+  const placeholder = $("#player-placeholder");
+  const np = $("#now-playing");
   if (!state.links.length) {
-    $("#now-playing").hidden = true;
-    $("#player-placeholder").hidden = false;
+    if (np) np.hidden = true;
+    if (placeholder) placeholder.hidden = false;
     return;
   }
-  $("#player-placeholder").hidden = true;
+  if (placeholder) placeholder.hidden = true;
 
   // Mantener el índice dentro de rango.
   state.currentIndex =
@@ -210,7 +219,9 @@ function prevVideo() {
 function toggleRotation() {
   state.rotating = !state.rotating;
   const btn = $("#btn-toggle");
-  btn.textContent = state.rotating ? "⏸ Pausar rotación" : "▶ Reanudar rotación";
+  if (btn) {
+    btn.textContent = state.rotating ? "⏸ Pausar rotación" : "▶ Reanudar rotación";
+  }
 }
 
 // Tic de 1 segundo: maneja la cuenta regresiva de la rotación.
@@ -229,6 +240,7 @@ setInterval(() => {
 /* --------------------------- Render UI ---------------------------------- */
 function renderNowPlaying() {
   const np = $("#now-playing");
+  if (!np) return;
   if (!state.links.length) {
     np.hidden = true;
     return;
@@ -240,6 +252,7 @@ function renderNowPlaying() {
 
 function renderCountdown() {
   const el = $("#countdown");
+  if (!el) return;
   if (state.links.length < 2) {
     el.textContent = state.links.length ? "único canal" : "—";
     return;
@@ -249,6 +262,7 @@ function renderCountdown() {
 
 function renderLinkList() {
   const ul = $("#link-list");
+  if (!ul) return;
   ul.innerHTML = "";
 
   if (!state.links.length) {
@@ -328,6 +342,7 @@ const audioEl = $("#audio-el");
 
 function renderAudioList() {
   const ul = $("#audio-list");
+  if (!ul) return;
   ul.innerHTML = "";
 
   if (!state.audioTracks.length) {
@@ -430,7 +445,8 @@ function removeAudio(id) {
 }
 
 function updateAudioToggle() {
-  $("#audio-toggle").textContent = audioEl.paused ? "▶ Reproducir" : "⏸ Pausar";
+  const btn = $("#audio-toggle");
+  if (btn) btn.textContent = audioEl.paused ? "▶ Reproducir" : "⏸ Pausar";
 }
 
 // Al terminar una pista, pasar a la siguiente (loop de la parrilla).
@@ -450,7 +466,8 @@ const timeFmt = new Intl.DateTimeFormat("es-CL", {
 });
 
 function renderClock() {
-  $("#oi-time").textContent = timeFmt.format(new Date());
+  const el = $("#oi-time");
+  if (el) el.textContent = timeFmt.format(new Date());
 }
 
 async function fetchTemperature() {
@@ -463,11 +480,13 @@ async function fetchTemperature() {
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     const t = data?.current?.temperature_2m;
-    if (typeof t === "number") {
-      $("#oi-temp").textContent = `${Math.round(t)}°C`;
+    const el = $("#oi-temp");
+    if (el && typeof t === "number") {
+      el.textContent = `${Math.round(t)}°C`;
     }
   } catch {
-    $("#oi-temp").textContent = "—";
+    const el = $("#oi-temp");
+    if (el) el.textContent = "—";
   }
 }
 
@@ -494,24 +513,24 @@ function armAudioAutostart() {
 
 /* --------------------------- Eventos UI --------------------------------- */
 function bindEvents() {
-  $("#add-link-form").addEventListener("submit", (e) => {
+  on("#add-link-form", "submit", (e) => {
     e.preventDefault();
     const input = $("#link-input");
     if (addLink(input.value)) input.value = "";
   });
 
-  $("#btn-next").addEventListener("click", nextVideo);
-  $("#btn-prev").addEventListener("click", prevVideo);
-  $("#btn-toggle").addEventListener("click", toggleRotation);
+  on("#btn-next", "click", nextVideo);
+  on("#btn-prev", "click", prevVideo);
+  on("#btn-toggle", "click", toggleRotation);
 
-  $("#btn-restore").addEventListener("click", () => {
+  on("#btn-restore", "click", () => {
     if (!confirm("¿Restaurar la lista de canales por defecto?")) return;
     seedDefaultLinks();
     renderLinkList();
     playCurrent();
   });
 
-  $("#interval-input").addEventListener("change", (e) => {
+  on("#interval-input", "change", (e) => {
     const val = parseInt(e.target.value, 10);
     if (Number.isFinite(val) && val >= 5) {
       state.intervalSeconds = val;
@@ -522,12 +541,12 @@ function bindEvents() {
     }
   });
 
-  $("#audio-input").addEventListener("change", (e) => {
+  on("#audio-input", "change", (e) => {
     if (e.target.files.length) addAudioFiles(e.target.files);
     e.target.value = ""; // permitir resubir el mismo archivo
   });
 
-  $("#audio-toggle").addEventListener("click", () => {
+  on("#audio-toggle", "click", () => {
     if (!state.audioTracks.length) return;
     if (audioEl.paused) {
       if (!audioEl.src) playAudioCurrent();
@@ -538,19 +557,19 @@ function bindEvents() {
     updateAudioToggle();
   });
 
-  $("#audio-next").addEventListener("click", () => {
+  on("#audio-next", "click", () => {
     if (!state.audioTracks.length) return;
     state.audioIndex += 1;
     playAudioCurrent();
   });
 
-  $("#audio-prev").addEventListener("click", () => {
+  on("#audio-prev", "click", () => {
     if (!state.audioTracks.length) return;
     state.audioIndex -= 1;
     playAudioCurrent();
   });
 
-  $("#audio-volume").addEventListener("input", (e) => {
+  on("#audio-volume", "input", (e) => {
     audioEl.volume = parseFloat(e.target.value);
   });
 }
@@ -558,9 +577,11 @@ function bindEvents() {
 /* ------------------------------- Init ----------------------------------- */
 function init() {
   loadPersisted();
-  $("#interval-input").value = state.intervalSeconds;
+  const intervalInput = $("#interval-input");
+  if (intervalInput) intervalInput.value = state.intervalSeconds;
   state.remaining = state.intervalSeconds;
-  audioEl.volume = parseFloat($("#audio-volume").value);
+  const volInput = $("#audio-volume");
+  if (volInput) audioEl.volume = parseFloat(volInput.value);
 
   bindEvents();
   renderLinkList();

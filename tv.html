@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Videos Prisa — Pantalla</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="kiosk">
+  <div class="player-wrapper">
+    <div id="yt-player"></div>
+    <div id="player-placeholder" class="player-placeholder">
+      <p>Sin canales configurados. Abrí la versión con controles para agregarlos.</p>
+    </div>
+
+    <div class="overlay-info" id="overlay-info">
+      <span class="oi-time" id="oi-time">--:--:--</span>
+      <span class="oi-temp" id="oi-temp">--°</span>
+      <span class="oi-city">Santiago</span>
+    </div>
+  </div>
+
+  <audio id="audio-el"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
