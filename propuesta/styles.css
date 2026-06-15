@@ -1,0 +1,9 @@
+/* ============================================================
+   WEMUL DESIGN SYSTEM · global entry point (local copy)
+   Links the full token + font closure for the
+   Wemul × PRISA Media deck.
+   ============================================================ */
+@import url('./tokens/fonts.css');
+@import url('./tokens/colors.css');
+@import url('./tokens/typography.css');
+@import url('./tokens/spacing.css');

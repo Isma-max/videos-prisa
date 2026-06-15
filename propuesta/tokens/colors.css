@@ -1,0 +1,113 @@
+/* ============================================================
+   WEMUL · COLOR SYSTEM
+   Base palette from the Somos Wemul 2026 deck.
+   Rojo coral = energía creativa · Azul digital = performance
+   Navy = seriedad estratégica · Blanco = aire / estándar premium
+   ============================================================ */
+:root {
+  /* ---- Brand cores ---- */
+  --wemul-coral: #FF403E;   /* primary brand */
+  --wemul-blue:  #0081FE;   /* digital performance */
+  --wemul-navy:  #012039;   /* strategic depth */
+  --wemul-sky:   #82C4FF;   /* support / celeste */
+  --wemul-white: #FFFFFF;
+  --wemul-black: #0D0D0D;   /* negro técnico */
+
+  /* ---- Coral scale ---- */
+  --coral-50:  #FFECEC;
+  --coral-100: #FFD6D5;
+  --coral-200: #FFADAC;
+  --coral-300: #FF8482;
+  --coral-400: #FF5E5C;
+  --coral-500: #FF403E;   /* base */
+  --coral-600: #E62A28;
+  --coral-700: #BE1F1D;
+  --coral-800: #8C1716;
+  --coral-900: #5A0F0E;
+
+  /* ---- Blue scale ---- */
+  --blue-50:  #E6F2FF;
+  --blue-100: #CCE5FF;
+  --blue-200: #99CBFF;
+  --blue-300: #5FAEFF;   /* near sky */
+  --blue-400: #2E97FF;
+  --blue-500: #0081FE;   /* base */
+  --blue-600: #0067CC;
+  --blue-700: #014E9B;
+  --blue-800: #013A73;
+  --blue-900: #012A54;
+
+  /* ---- Navy scale ---- */
+  --navy-50:  #E7EBEF;
+  --navy-100: #C2CCD6;
+  --navy-200: #8597A8;
+  --navy-300: #4E6679;
+  --navy-400: #234057;
+  --navy-500: #012039;   /* base */
+  --navy-600: #011A2F;
+  --navy-700: #011425;
+  --navy-800: #000E1A;
+  --navy-900: #00080F;
+
+  /* ---- Neutral / ink scale (warm-cool technical grays) ---- */
+  --ink-0:   #FFFFFF;
+  --ink-25:  #FAFBFC;
+  --ink-50:  #F3F5F7;
+  --ink-100: #E7EBEF;
+  --ink-200: #D2D9E0;
+  --ink-300: #B0BAC5;
+  --ink-400: #8492A0;
+  --ink-500: #5E6B78;
+  --ink-600: #44505B;
+  --ink-700: #2E3742;
+  --ink-800: #1A2128;
+  --ink-900: #0D0D0D;
+
+  /* ---- Semantic UI states ---- */
+  --success: #18915A;
+  --success-bg: #E4F4EC;
+  --warning: #F2A516;
+  --warning-bg: #FEF1D9;
+  --error: #E5322F;
+  --error-bg: #FFE6E5;
+  --info: #0081FE;
+  --info-bg: #E6F2FF;
+
+  /* ---- Semantic surfaces ---- */
+  --surface-page:    var(--ink-0);
+  --surface-subtle:  var(--ink-50);
+  --surface-card:    var(--ink-0);
+  --surface-navy:    var(--navy-500);
+  --surface-coral:   var(--coral-500);
+  --surface-blue:    var(--blue-500);
+  --surface-inverse: var(--ink-900);
+
+  /* ---- Semantic text ---- */
+  --text-strong:   var(--navy-500);   /* default headlines */
+  --text-body:     var(--ink-700);
+  --text-muted:    var(--ink-500);
+  --text-faint:    var(--ink-400);
+  --text-on-coral: #FFFFFF;
+  --text-on-blue:  #FFFFFF;
+  --text-on-navy:  #FFFFFF;
+  --text-inverse:  #FFFFFF;
+  --text-link:     var(--blue-600);
+
+  /* ---- Borders ---- */
+  --border-subtle: var(--ink-100);
+  --border-default: var(--ink-200);
+  --border-strong: var(--navy-500);
+  --border-coral:  var(--coral-500);
+  --border-focus:  var(--blue-500);
+
+  /* ---- Accents ---- */
+  --accent-pill:   var(--blue-500);
+  --accent-energy: var(--coral-500);
+  --accent-sky:    var(--sky, var(--wemul-sky));
+
+  /* ---- Approved gradients (use sparingly, large blocks only) ---- */
+  --grad-coral:  linear-gradient(135deg, #FF5E5C 0%, #FF403E 60%, #E62A28 100%); /* @kind color */
+  --grad-blue:   linear-gradient(135deg, #2E97FF 0%, #0081FE 70%, #0067CC 100%); /* @kind color */
+  --grad-navy:   linear-gradient(160deg, #023154 0%, #012039 70%, #011425 100%); /* @kind color */
+  --grad-spark:  linear-gradient(120deg, #FF403E 0%, #0081FE 100%); /* @kind color */
+}
