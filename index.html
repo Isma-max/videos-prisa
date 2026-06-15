@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Videos Prisa — Player de YouTube Live</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Videos Prisa</h1>
+    <p class="subtitle">Player rotativo de YouTube Live con audio propio</p>
+  </header>
+
+  <main class="layout">
+    <!-- Zona del reproductor -->
+    <section class="player-area">
+      <div class="player-wrapper">
+        <div id="yt-player"></div>
+        <div id="player-placeholder" class="player-placeholder">
+          <p>Agregá uno o más links de YouTube Live para empezar.</p>
+        </div>
+        <div class="now-playing" id="now-playing" hidden>
+          <span class="np-index" id="np-index">1/1</span>
+          <span class="np-title" id="np-title">—</span>
+        </div>
+      </div>
+
+      <!-- Controles de rotación -->
+      <div class="controls">
+        <button id="btn-prev" class="ctrl" title="Video anterior">⏮</button>
+        <button id="btn-toggle" class="ctrl ctrl-primary" title="Pausar/Reanudar rotación">⏸ Pausar rotación</button>
+        <button id="btn-next" class="ctrl" title="Video siguiente">⏭</button>
+
+        <label class="interval-field">
+          Cambiar cada
+          <input type="number" id="interval-input" min="5" step="5" value="30" />
+          seg.
+        </label>
+
+        <span class="countdown" id="countdown">—</span>
+      </div>
+    </section>
+
+    <!-- Panel lateral -->
+    <aside class="panel">
+      <!-- Links de video -->
+      <div class="card">
+        <h2>Canales (YouTube Live)</h2>
+        <form id="add-link-form" class="add-link">
+          <input
+            type="text"
+            id="link-input"
+            placeholder="Pegá un link de YouTube y Enter"
+            autocomplete="off"
+          />
+          <button type="submit">Agregar</button>
+        </form>
+        <p class="hint">
+          Soporta links tipo <code>watch?v=</code>, <code>youtu.be/</code>,
+          <code>/live/</code> y <code>/embed/</code>.
+        </p>
+        <ul id="link-list" class="link-list"></ul>
+      </div>
+
+      <!-- Audio propio -->
+      <div class="card">
+        <h2>Audio (parrilla)</h2>
+        <label class="file-field">
+          <input type="file" id="audio-input" accept="audio/*" multiple />
+          <span>Subir programas de radio</span>
+        </label>
+        <p class="hint">
+          El video va en mudo; el audio sale de esta lista (loop continuo).
+        </p>
+
+        <div class="audio-controls">
+          <button id="audio-prev" class="ctrl" title="Pista anterior">⏮</button>
+          <button id="audio-toggle" class="ctrl ctrl-primary" title="Play/Pausa audio">▶ Reproducir</button>
+          <button id="audio-next" class="ctrl" title="Pista siguiente">⏭</button>
+        </div>
+
+        <label class="volume-field">
+          Volumen
+          <input type="range" id="audio-volume" min="0" max="1" step="0.01" value="1" />
+        </label>
+
+        <ul id="audio-list" class="audio-list"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <audio id="audio-el"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
