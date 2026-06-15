@@ -1,21 +1,30 @@
 # Wemul × PRISA Media — Propuesta comercial
 
-Presentación 16:9 (24 slides) implementada desde el diseño
-`Wemul x PRISA Media.dc.html` exportado de Claude Design. Recrea el diseño
-de forma fiel usando el **Wemul Design System** (tokens de color, tipografía
-Gabarito/Roboto y espaciado), sin depender del runtime de Claude Design ni de
-CDNs: es HTML/CSS/JS puro y autónomo.
+Presentación 16:9 implementada desde el diseño `Wemul x PRISA Media.dc.html`
+exportado de Claude Design. Recrea el diseño de forma fiel usando el **Wemul
+Design System** (tokens de color, tipografía Gabarito/Roboto y espaciado), sin
+depender del runtime de Claude Design ni de CDNs: es HTML/CSS/JS puro y
+autónomo.
 
-## Estructura
+## Archivos de presentación
 
-- **Agencia (slides 1–18):** portada, qué hacemos, números de impacto,
-  separador "Nuestra experiencia", casos (Sodimac HUM, estrategia que escala,
-  Bilz y Pap, La Roja, Gran Effie), transición a portafolio + 4 grillas de
-  cards (retail, marcas, medios/gobierno, cultura pop), amplificación,
-  nuestras redes, sistema "Creamos · Amplificamos · Administramos" y cierre.
-- **Propuesta PRISA (slides 19–24):** separador con las dos líneas de trabajo,
-  El Chacotero Sentimental, piloto de 8 historias, PRISA Replay ("el REC de la
-  radio"), señal continua con 3 rutas + modelo comercial, y cierre.
+- **`index.html`** — versión **solo propuesta** (6 slides): la sección PRISA
+  desde "Formatos propuestos" en adelante. Es la presentación principal.
+- **`presentacion-completa.html`** — el deck completo de **24 slides**
+  (sección de agencia 1–18 + propuesta PRISA 19–24), por si se necesita.
+
+## Estructura — solo propuesta (`index.html`)
+
+1. **Formatos propuestos** — separador con las dos líneas de trabajo.
+2. **El Chacotero Sentimental** — idea central / punto de partida / nuevo formato.
+3. **Propuesta de piloto** — 8 historias premium + componentes + valor/resultado.
+4. **PRISA Replay** — "el REC de la radio", con mockup de señal en vivo.
+5. **Señal continua** — 3 rutas visuales + modelo comercial.
+6. **Cierre de propuesta** — "Una nueva vida para el archivo radial" + contacto.
+
+> El deck completo (`presentacion-completa.html`) añade antes la sección de
+> agencia: portada, qué hacemos, números, casos (Sodimac HUM, Bilz y Pap, La
+> Roja, Gran Effie), portafolio y "Creamos · Amplificamos · Administramos".
 
 ## Uso
 
@@ -45,7 +54,8 @@ personajes, mockups de señal en vivo, logos, etc.). Haz **clic** sobre uno o
 ## Archivos
 
 ```
-index.html        → la presentación (24 <section> dentro de <deck-stage>)
+index.html               → presentación solo propuesta (6 <section>)
+presentacion-completa.html → deck completo de 24 <section>
 deck-stage.js     → componente de escenario 16:9 (escalado + navegación)
 image-slot.js     → placeholder de imagen rellenable
 styles.css        → entry point que importa los tokens
