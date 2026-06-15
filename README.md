@@ -15,6 +15,12 @@ videos va en **mudo**: el sonido sale de tus propios archivos de audio
 - **Sin build**: HTML/CSS/JS puro. Se abre en cualquier navegador moderno.
 - **Persistencia**: los links de video y el intervalo se guardan en el
   navegador (`localStorage`).
+- **Señales precargadas**: viene con un set de canales por defecto (botón
+  *Restaurar* para volver a ellos).
+- **Audio de piloto automático**: si dejás `audio/0615.<ext>` en la carpeta
+  `audio/`, se carga solo y queda en loop continuo.
+- **Reloj y temperatura de Santiago** sobre la imagen del player (hora local
+  en vivo y temperatura actual vía Open-Meteo).
 
 ## Uso
 

@@ -15,6 +15,36 @@ const STORAGE_KEYS = {
   interval: "videosprisa.interval",
 };
 
+// Señales live que vienen precargadas la primera vez (o al restaurar).
+const DEFAULT_LINKS = [
+  "https://youtu.be/VR-x3HdhKLQ",
+  "https://www.youtube.com/watch?v=m1XcdxjVGos",
+  "https://www.youtube.com/watch?v=NqOmHpwMUxs",
+  "https://www.youtube.com/watch?v=xCLTpcx9aO8",
+  "https://www.youtube.com/watch?v=6MMXJrzT5c0",
+  "https://www.youtube.com/watch?v=1HxOxiMZUNI",
+  "https://www.youtube.com/watch?v=0FBiyFpV__g",
+  "https://www.youtube.com/watch?v=12KqO5IBLeY",
+  "https://youtu.be/hM69IdmpHsc",
+];
+
+// Audio para pilotear: se intenta cargar automáticamente desde la carpeta
+// audio/ y se deja en loop. Dejá tu archivo ahí con uno de estos nombres.
+const DEFAULT_AUDIO = {
+  name: "0615",
+  candidates: [
+    "audio/0615.mp3",
+    "audio/0615.m4a",
+    "audio/0615.aac",
+    "audio/0615.ogg",
+    "audio/0615.opus",
+    "audio/0615.wav",
+  ],
+};
+
+// Ubicación de Santiago de Chile para el clima (Open-Meteo, sin API key).
+const SANTIAGO = { lat: -33.4489, lon: -70.6693, tz: "America/Santiago" };
+
 /* ----------------------------- Estado ---------------------------------- */
 const state = {
   links: [], // [{ id, url, videoId }]
@@ -86,10 +116,25 @@ function loadPersisted() {
   } catch {
     /* ignorar datos corruptos */
   }
+  // Primera vez (sin links guardados): sembrar las señales por defecto.
+  if (!state.links.length) seedDefaultLinks();
+
   const savedInterval = parseInt(localStorage.getItem(STORAGE_KEYS.interval), 10);
   if (Number.isFinite(savedInterval) && savedInterval >= 5) {
     state.intervalSeconds = savedInterval;
   }
+}
+
+function makeLink(rawUrl) {
+  const videoId = parseVideoId(rawUrl);
+  if (!videoId) return null;
+  return { id: uid(), url: rawUrl.trim(), videoId };
+}
+
+function seedDefaultLinks() {
+  state.links = DEFAULT_LINKS.map(makeLink).filter(Boolean);
+  state.currentIndex = 0;
+  saveLinks();
 }
 
 /* --------------------- YouTube IFrame API ------------------------------- */
@@ -240,12 +285,12 @@ function renderLinkList() {
 
 /* --------------------------- Acciones de links -------------------------- */
 function addLink(rawUrl) {
-  const videoId = parseVideoId(rawUrl);
-  if (!videoId) {
+  const link = makeLink(rawUrl);
+  if (!link) {
     alert("No pude reconocer un video de YouTube en ese link.");
     return false;
   }
-  state.links.push({ id: uid(), url: rawUrl.trim(), videoId });
+  state.links.push(link);
   saveLinks();
   renderLinkList();
 
@@ -322,6 +367,9 @@ function playAudioCurrent() {
     ((state.audioIndex % state.audioTracks.length) + state.audioTracks.length) %
     state.audioTracks.length;
 
+  // Con una sola pista (caso piloto) usamos loop nativo para que sea continuo.
+  audioEl.loop = state.audioTracks.length === 1;
+
   const track = state.audioTracks[state.audioIndex];
   audioEl.src = track.url;
   audioEl.play().catch(() => {
@@ -329,6 +377,26 @@ function playAudioCurrent() {
   });
   updateAudioToggle();
   renderAudioList();
+}
+
+/**
+ * Intenta cargar el audio de piloto desde la carpeta audio/ probando varias
+ * extensiones. Si lo encuentra, lo agrega y lo deja sonando en loop.
+ */
+async function loadDefaultAudio() {
+  for (const url of DEFAULT_AUDIO.candidates) {
+    try {
+      const res = await fetch(url, { method: "HEAD" });
+      if (res.ok) {
+        state.audioTracks.push({ id: uid(), name: DEFAULT_AUDIO.name, url });
+        renderAudioList();
+        playAudioCurrent();
+        return;
+      }
+    } catch {
+      /* archivo no disponible con esa extensión; seguir probando */
+    }
+  }
 }
 
 function addAudioFiles(fileList) {
@@ -372,6 +440,58 @@ audioEl.addEventListener("ended", () => {
   playAudioCurrent();
 });
 
+/* ----------------------- Reloj + clima Santiago ------------------------- */
+const timeFmt = new Intl.DateTimeFormat("es-CL", {
+  timeZone: SANTIAGO.tz,
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
+function renderClock() {
+  $("#oi-time").textContent = timeFmt.format(new Date());
+}
+
+async function fetchTemperature() {
+  const url =
+    `https://api.open-meteo.com/v1/forecast?latitude=${SANTIAGO.lat}` +
+    `&longitude=${SANTIAGO.lon}&current=temperature_2m` +
+    `&timezone=${encodeURIComponent(SANTIAGO.tz)}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    const t = data?.current?.temperature_2m;
+    if (typeof t === "number") {
+      $("#oi-temp").textContent = `${Math.round(t)}°C`;
+    }
+  } catch {
+    $("#oi-temp").textContent = "—";
+  }
+}
+
+function startClockAndWeather() {
+  renderClock();
+  setInterval(renderClock, 1000);
+  fetchTemperature();
+  setInterval(fetchTemperature, 10 * 60 * 1000); // refrescar cada 10 min
+}
+
+// Arranca el audio tras la primera interacción (los navegadores bloquean el
+// autoplay con sonido hasta que el usuario interactúa con la página).
+function armAudioAutostart() {
+  const tryStart = () => {
+    if (state.audioTracks.length && audioEl.paused) {
+      if (!audioEl.src) playAudioCurrent();
+      else audioEl.play().catch(() => {});
+      updateAudioToggle();
+    }
+  };
+  document.addEventListener("pointerdown", tryStart, { once: true });
+  document.addEventListener("keydown", tryStart, { once: true });
+}
+
 /* --------------------------- Eventos UI --------------------------------- */
 function bindEvents() {
   $("#add-link-form").addEventListener("submit", (e) => {
@@ -383,6 +503,13 @@ function bindEvents() {
   $("#btn-next").addEventListener("click", nextVideo);
   $("#btn-prev").addEventListener("click", prevVideo);
   $("#btn-toggle").addEventListener("click", toggleRotation);
+
+  $("#btn-restore").addEventListener("click", () => {
+    if (!confirm("¿Restaurar la lista de canales por defecto?")) return;
+    seedDefaultLinks();
+    renderLinkList();
+    playCurrent();
+  });
 
   $("#interval-input").addEventListener("change", (e) => {
     const val = parseInt(e.target.value, 10);
@@ -441,6 +568,9 @@ function init() {
   renderNowPlaying();
   renderCountdown();
 
+  startClockAndWeather();
+  armAudioAutostart();
+  loadDefaultAudio();
   loadYouTubeApi();
 }
 

@@ -24,6 +24,12 @@
           <span class="np-index" id="np-index">1/1</span>
           <span class="np-title" id="np-title">—</span>
         </div>
+
+        <div class="overlay-info" id="overlay-info">
+          <span class="oi-time" id="oi-time">--:--:--</span>
+          <span class="oi-temp" id="oi-temp">--°</span>
+          <span class="oi-city">Santiago</span>
+        </div>
       </div>
 
       <!-- Controles de rotación -->
@@ -46,7 +52,10 @@
     <aside class="panel">
       <!-- Links de video -->
       <div class="card">
-        <h2>Canales (YouTube Live)</h2>
+        <div class="card-head">
+          <h2>Canales (YouTube Live)</h2>
+          <button id="btn-restore" class="link-btn" title="Volver a las señales por defecto">Restaurar</button>
+        </div>
         <form id="add-link-form" class="add-link">
           <input
             type="text"
