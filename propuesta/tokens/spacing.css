@@ -1,0 +1,77 @@
+/* ============================================================
+   WEMUL · SPACING, RADIUS, SHADOW, LAYOUT, Z-INDEX, BREAKPOINTS
+   8pt base grid. Generous air, large flat color blocks,
+   controlled-asymmetric layouts.
+   ============================================================ */
+:root {
+  /* ---- Spacing scale (8pt base, with half-steps) ---- */
+  --space-0:  0;
+  --space-1:  0.25rem;  /* 4 */
+  --space-2:  0.5rem;   /* 8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  2.5rem;   /* 40 */
+  --space-8:  3rem;     /* 48 */
+  --space-9:  4rem;     /* 64 */
+  --space-10: 5rem;     /* 80 */
+  --space-11: 6rem;     /* 96 */
+  --space-12: 8rem;     /* 128 */
+  --space-section: 7.5rem; /* vertical rhythm between page sections */
+
+  /* ---- Radius ---- */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   14px;
+  --radius-lg:   22px;
+  --radius-xl:   32px;
+  --radius-2xl:  44px;
+  --radius-pill: 999px;
+  --radius-card: var(--radius-lg);  /* portfolio / service cards */
+
+  /* ---- Shadows (cool navy-tinted, never pure black) ---- */
+  --shadow-xs: 0 1px 2px rgba(1, 32, 57, 0.06);
+  --shadow-sm: 0 2px 8px rgba(1, 32, 57, 0.08);
+  --shadow-md: 0 8px 24px rgba(1, 32, 57, 0.10);
+  --shadow-lg: 0 18px 48px rgba(1, 32, 57, 0.14);
+  --shadow-xl: 0 30px 80px rgba(1, 32, 57, 0.18);
+  --shadow-coral: 0 16px 40px rgba(255, 64, 62, 0.28);
+  --shadow-blue:  0 16px 40px rgba(0, 129, 254, 0.26);
+  --shadow-focus: 0 0 0 4px rgba(0, 129, 254, 0.30);
+
+  /* ---- Layout ---- */
+  --container-max: 1240px; /* @kind other */
+  --container-wide: 1440px; /* @kind other */
+  --container-text: 720px; /* @kind other */
+  --gutter-desktop: 2rem; /* @kind spacing */
+  --gutter-tablet:  1.5rem; /* @kind spacing */
+  --gutter-mobile:  1.25rem; /* @kind spacing */
+  --grid-cols: 12; /* @kind other */
+  --grid-gap: 1.5rem; /* @kind spacing */
+  --header-h: 76px; /* @kind other */
+
+  /* ---- Z-index ---- */
+  --z-base:    0; /* @kind other */
+  --z-raised:  10; /* @kind other */
+  --z-sticky:  100; /* @kind other */
+  --z-header:  500; /* @kind other */
+  --z-overlay: 800; /* @kind other */
+  --z-modal:   900; /* @kind other */
+  --z-toast:   1000; /* @kind other */
+
+  /* ---- Breakpoints (reference; use in @media) ---- */
+  --bp-mobile: 480px; /* @kind other */
+  --bp-tablet: 768px; /* @kind other */
+  --bp-desktop: 1024px; /* @kind other */
+  --bp-wide: 1440px; /* @kind other */
+
+  /* ---- Motion ---- */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --ease-snap:  cubic-bezier(0.5, 1.6, 0.4, 1); /* @kind other */
+  --dur-fast:   140ms; /* @kind other */
+  --dur-base:   240ms; /* @kind other */
+  --dur-slow:   420ms; /* @kind other */
+  --dur-reveal: 640ms; /* @kind other */
+}
