@@ -112,13 +112,31 @@ function parseVideoId(input) {
 }
 
 /* --------------------------- Persistencia ------------------------------- */
+// Wrappers tolerantes: si el navegador bloquea localStorage (modo privado,
+// escudos de privacidad, etc.), la app sigue funcionando solo en memoria.
+function storageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function storageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* almacenamiento no disponible; seguimos en memoria */
+  }
+}
+
 function saveLinks() {
-  localStorage.setItem(STORAGE_KEYS.links, JSON.stringify(state.links));
+  storageSet(STORAGE_KEYS.links, JSON.stringify(state.links));
 }
 
 function loadPersisted() {
   try {
-    const links = JSON.parse(localStorage.getItem(STORAGE_KEYS.links) || "[]");
+    const links = JSON.parse(storageGet(STORAGE_KEYS.links) || "[]");
     if (Array.isArray(links)) state.links = links;
   } catch {
     /* ignorar datos corruptos */
@@ -126,7 +144,7 @@ function loadPersisted() {
   // Primera vez (sin links guardados): sembrar las señales por defecto.
   if (!state.links.length) seedDefaultLinks();
 
-  const savedInterval = parseInt(localStorage.getItem(STORAGE_KEYS.interval), 10);
+  const savedInterval = parseInt(storageGet(STORAGE_KEYS.interval), 10);
   if (Number.isFinite(savedInterval) && savedInterval >= 5) {
     state.intervalSeconds = savedInterval;
   }
@@ -535,7 +553,7 @@ function bindEvents() {
     if (Number.isFinite(val) && val >= 5) {
       state.intervalSeconds = val;
       state.remaining = val;
-      localStorage.setItem(STORAGE_KEYS.interval, String(val));
+      storageSet(STORAGE_KEYS.interval, String(val));
     } else {
       e.target.value = state.intervalSeconds;
     }
@@ -588,6 +606,11 @@ function init() {
   renderAudioList();
   renderNowPlaying();
   renderCountdown();
+
+  // Si ya hay canales, ocultar el placeholder aunque el video todavía no haya
+  // cargado (evita mostrar "sin canales" por error mientras carga YouTube).
+  const placeholder = $("#player-placeholder");
+  if (placeholder && state.links.length) placeholder.hidden = true;
 
   startClockAndWeather();
   armAudioAutostart();
